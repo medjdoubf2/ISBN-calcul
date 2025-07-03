@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de ISBN-13</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background:url(img/ISBN.webp);
+        }
+        .calculator {
+            background: rgb(160, 255, 201);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #43f543;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #0056b3;
+            outline: none;
+        }
+        button {
+            padding: 12px;
+            background-color: #00bbff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>lector de ISBN-13</h1>
+        <input type="text" id="isbnInput" placeholder="Ingresa los primeros 12 dígitos" maxlength="12" />
+        <button onclick="calculateISBN()">Calcular Dígito de Control</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateISBN() {
+            const input = document.getElementById('isbnInput').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.remove('error'); // Limpiar clase de error
+
+            if (input.length !== 12 || !/^\d+$/.test(input)) {
+                resultDiv.classList.add('error');
+                resultDiv.innerText = 'Por favor, ingresa exactamente 12 dígitos.';
+                return;
+            }
+
+            let sum = 0;
+            for (let i = 0; i < 12; i++) {
+                const digit = parseInt(input[i]);
+                sum += (i % 2 === 0) ? digit : digit * 3;
+            }
+
+            const mod = sum % 10;
+            const checkDigit = (mod === 0) ? 0 : 10 - mod;
+
+            resultDiv.innerText = `El dígito de control es: ${checkDigit}`;
+        }
+    </script>
+</body>
+</html>
